@@ -421,7 +421,6 @@
       do i = 1, nx_block
          fresh     (i,j,iblk) = fresh(i,j,iblk)       &
               + frain(i,j,iblk)*aice(i,j,iblk)
-
          fiso_ocn(i,j,:,iblk) = fiso_ocn(i,j,:,iblk)  &
               + fiso_rain(i,j,:,iblk)*aice(i,j,iblk)
       enddo
@@ -521,9 +520,9 @@
                         frzmlt   (:,:,  iblk),           &
                         frazil   (:,:,  iblk),           &
                         fiso_ocn (:,:,:,iblk),           &
-                        HDO_ocn (:,:, iblk),           &
-                        H2_16O_ocn(:,:,iblk),           &
-                        H2_18O_ocn(:,:,iblk),           &
+                        HDO_ocn (:,:, iblk),             &
+                        H2_16O_ocn(:,:,iblk),            &
+                        H2_18O_ocn(:,:,iblk),            &
                         frz_onset(:,:,  iblk), yday,     &
                         fresh    (:,:,  iblk),           &
                         fsalt    (:,:,  iblk),           &
@@ -593,7 +592,7 @@
                         trcr_depend,                                &
                         fresh   (:,:,  iblk), fsalt   (:,:,  iblk), &
                         fhocn   (:,:,  iblk),                       &
-                        fsoot   (:,:,:,iblk),fiso_ocn(:,:,:,iblk), &
+                        fsoot   (:,:,:,iblk),fiso_ocn(:,:,:,iblk),  &
                         tr_aero, tr_iso,                            &
                         heat_capacity,        l_stop,               &
                         istop,                jstop)
@@ -746,7 +745,7 @@
                          dardg1dt(:,:,iblk),   dardg2dt  (:,:,iblk),     &
                          dvirdgdt(:,:,iblk),   opening   (:,:,iblk),     &
                          fresh   (:,:,iblk),   fhocn     (:,:,iblk),     &
-                         fsoot (:,:,:,iblk),fiso_ocn  (:,:,:,iblk))
+                         fsoot   (:,:,:,iblk), fiso_ocn  (:,:,:,iblk))
 
          if (l_stop) then
             write (nu_diag,*) 'istep1, my_task, iblk =', &
@@ -794,7 +793,7 @@
                            trcr_depend,                                &
                            fresh   (:,:,  iblk), fsalt   (:,:,  iblk), &
                            fhocn   (:,:,  iblk),                       &
-                           fsoot   (:,:,:,iblk),fiso_ocn(:,:,:,iblk), &
+                           fsoot   (:,:,:,iblk),fiso_ocn(:,:,:,iblk),  &
                            tr_aero, tr_iso,                            &
                            heat_capacity,        l_stop,               &
                            istop,                jstop)

@@ -28,29 +28,29 @@ my $ProgDir = $1;                         # name of directory where program live
 
 my $cwd = getcwd();  # current working directory
 my $cfgdir;
-my $utilroot = $ENV{'UTILROOT'};
 
-if ($ProgDir) { 
-    $cfgdir = $ProgDir; 
-} else { 
-    $cfgdir = $cwd; 
+if ($ProgDir) {
+    $cfgdir = $ProgDir;
+} else {
+    $cfgdir = $cwd;
 }
+my $cimeroot = "$cfgdir/../../../cime";
 
 # The XML::Lite module is required to parse the XML configuration files.
 my $xmldir;
 if (-f "../Tools/XML/Lite.pm") {
     $xmldir = "../Tools";
-} elsif (-f "$cfgdir/../../../../scripts/ccsm_utils/Tools/perl5lib/XML/Lite.pm") {
-    $xmldir = "$cfgdir/../../../../scripts/ccsm_utils/Tools/perl5lib";
+} elsif (-f "$cimeroot/utils/perl5lib/XML/Lite.pm") {
+    $xmldir = "$cimeroot/utils/perl5lib";
 } else {
     die <<"EOF";
 ** (generate_cice_decomp): Cannot find perl module \"XML/Lite.pm\" 
 EOF
 }
-	  
+
 #-----------------------------------------------------------------------------------------------
 # Add $cfgdir/perl5lib to the list of paths that Perl searches for modules
-my @dirs = ( $cfgdir, "$cfgdir/perl5lib", "$cfgdir/../../../../scripts/ccsm_utils/Tools/perl5lib", "$utilroot/Tools/perl5lib" );
+my @dirs = ( $cfgdir, "$cfgdir/perl5lib", "$cimeroot/utils/perl5lib" );
 unshift @INC, @dirs;
 require XML::Lite;
 
@@ -73,11 +73,11 @@ sub usage {
 SYNOPSIS
      $ProgName [options]
 OPTIONS
-     -nproc <number>      (or -n)   Number of mpi tasks used.	
+     -nproc <number>      (or -n)   Number of mpi tasks used.
                                     (required)
-     -res <resolution>    (or -r)   Horizontal resolution (gx1v6 etc.). 
+     -res <resolution>    (or -r)   Horizontal resolution (gx1v6 etc.).
                                     (default $res))
-     -nx <number>                   number of lons 
+     -nx <number>                   number of lons
                                     (required)
      -ny <number>                   number of lats
                                     (required)
@@ -98,9 +98,10 @@ EOF
 #------------------------------------------------------------------------------------------------
 
   my %opts = (
+                ccsmroot   => undef,
                 res        => $res,
-                nx         => $nx, 
-                ny         => $ny, 
+                nx         => $nx,
+                ny         => $ny,
                 nproc      => undef,
                 thrds      => 1,
                 output     => $output,
@@ -113,7 +114,8 @@ EOF
            );
 
   my $cmdline = @ARGV;
-  GetOptions( 
+  GetOptions(
+              "ccsmroot=s"   => \$opts{'ccsmroot'},
               "r|res=s"      => \$opts{'res'},
               "nx=i"         => \$opts{'nx'},
               "ny=i"         => \$opts{'ny'},
@@ -170,9 +172,9 @@ if ( $decomp{'maxblocks'} == 0) {
      printf "%d %s",-1, "ERROR:($ProgName) No Decomp Created \n";
   } else {
      if (      $opts{'output'} eq "all"       ) {
-	 printf "%d %d %d %d %d %s %s", 
+	 printf "%d %d %d %d %d %s %s",
 	 $nlon, $nlat,
-	 $decomp{'bsize_x'}, $decomp{'bsize_y'}, 
+	 $decomp{'bsize_x'}, $decomp{'bsize_y'},
 	 $decomp{'maxblocks'}, $decomp{'decomptype'}, $decomp{'decompset'};
       } elsif ( $opts{'output'} eq "maxblocks" ) {
         print $decomp{'maxblocks'};
@@ -349,8 +351,7 @@ sub CalcDecompInfo {
 sub clean
 {
     my ($name) = @_;
-    $name =~ s/^\s+//; # strip any leading whitespace 
+    $name =~ s/^\s+//; # strip any leading whitespace
     $name =~ s/\s+$//; # strip any trailing whitespace
     return ($name);
 }
-

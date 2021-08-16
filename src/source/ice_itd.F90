@@ -1670,7 +1670,7 @@
          trcr_depend  ! tracer dependency information
 
       logical (kind=log_kind), intent(in) :: &
-         tr_aero, tr_iso,     &
+         tr_aero, tr_iso,   &
          heat_capacity   ! if false, ice and snow have zero heat capacity
 
       logical (kind=log_kind), intent(out) :: &
@@ -1688,7 +1688,7 @@
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_aeromx), &
          intent(inout), optional :: &
-         fsoot        ! aerosol flux to ocean        (kg/m^2/s)
+         fsoot        ! soot flux to ocean        (kg/m^2/s)
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_isomx), &
          intent(inout), optional :: &
@@ -1714,7 +1714,7 @@
          dfhocn       ! zapped energy flux ( W/m^2)
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_aeromx) :: &
-         dfsoot       ! zapped aerosol flux   (kg/m^2/s)
+         dfsoot    ! zapped soot flux   (kg/m^2/s)
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_isomx) :: &
          dfiso_ocn    ! zapped isotope flux   (kg/m^2/s)
@@ -1838,7 +1838,7 @@
       if (present(fhocn)) &
            fhocn     (:,:) = fhocn(:,:)      + dfhocn(:,:)
       if (present(fsoot)) &
-           fsoot(:,:,:)    = fsoot(:,:,:)    + dfsoot(:,:,:)
+           fsoot   (:,:,:) = fsoot(:,:,:)    + dfsoot(:,:,:)
       if (present(fiso_ocn)) &
            fiso_ocn   (:,:,:) = fiso_ocn(:,:,:)    + dfiso_ocn(:,:,:)
 
@@ -1938,7 +1938,7 @@
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_aeromx), &
          intent(out) :: &
-         dfsoot       ! zapped aerosol flux   (kg/m^2/s)
+         dfsoot    ! zapped soot flux   (kg/m^2/s)
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_isomx), &
          intent(out) :: &
@@ -1946,6 +1946,7 @@
 
       logical (kind=log_kind), intent(in) :: &
          tr_aero, tr_iso
+
 
       logical (kind=log_kind), intent(out) :: &
          l_stop   ! if true, abort on return
@@ -2216,7 +2217,7 @@
  
             enddo               ! ij
          enddo                  ! k
- 
+
       !-----------------------------------------------------------------
       ! Zap water isotopes
       !-----------------------------------------------------------------
@@ -2238,7 +2239,7 @@
            enddo                 ! n
           enddo                  ! ij
          endif
-
+ 
       !-----------------------------------------------------------------
       ! Zap ice and snow volume, add water and salt to ocean
       !-----------------------------------------------------------------
@@ -2285,6 +2286,8 @@
           enddo                  ! ij
          endif
 
+      enddo                     ! n
+
 !!DIR$ CONCURRENT !Cray
 !!cdir nodep      !NEC
 !!ocl novrec      !Fujitsu
@@ -2303,8 +2306,6 @@
 !           enddo                 ! n
 !          enddo                  ! ij
 !         endif
-
-      enddo                     ! n
 
       !-----------------------------------------------------------------
       ! Correct aice

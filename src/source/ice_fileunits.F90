@@ -52,8 +52,8 @@
          nu_forcing    , &  ! forcing data file
          nu_dump       , &  ! dump file for restarting
          nu_restart    , &  ! restart input file
-         nu_dump_aero  , &  ! dump file for restarting ice aerosol tracer
-         nu_restart_aero,&  ! restart input file for ice aerosol tracer
+         nu_dump_aero  , &  ! dump file for restarting ice aerosol tracer MH
+         nu_restart_aero,&  ! restart input file for ice aerosol tracer MH
          nu_dump_iso   , &  ! dump file for restarting ice isotope tracer
          nu_restart_iso ,&  ! restart input file for ice isotope tracer
          nu_dump_age   , &  ! dump file for restarting ice age tracer

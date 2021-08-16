@@ -375,6 +375,15 @@ Default: 1
 </entry>
 
 <entry 
+id="fsnowrdg" 
+type="real"  
+category="parameterizations" 
+group="ice_nml" >
+snow fraction that survives in ridging
+Default: 0.5
+</entry>
+
+<entry 
 id="advection" 
 type="char*80"  
 category="parameterizations" 
@@ -451,6 +460,22 @@ type="real"
 category="swrad" 
 group="ice_nml" >
 maximum melting snow grain radius tunable parameter for dEdd albedo
+</entry>
+
+<entry 
+id="R_ice" 
+type="real"  
+category="swrad" 
+group="ice_nml" >
+bare ice tunable parameter for dEdd albedo
+</entry>
+
+<entry 
+id="R_pnd" 
+type="real"  
+category="swrad" 
+group="ice_nml" >
+melt pond tunable parameter for dEdd albedo
 </entry>
 
 <entry 

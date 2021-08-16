@@ -144,7 +144,7 @@
 
       real (kind=dbl_kind), &
          dimension (nx_block,ny_block,n_aeromx,max_blocks) :: &
-         faero       ! aerosol deposition rate (kg/m^2 s)
+         faero    ! aerosol deposition rate (kg/m^2 s)  MH
 
       real (kind=dbl_kind), &
          dimension (nx_block,ny_block,n_isomx,max_blocks) :: &
@@ -274,11 +274,11 @@
 
       real (kind=dbl_kind), &
         dimension (nx_block,ny_block,n_aeromx,max_blocks) :: &
-         fsoot
+         fsoot        
 
       real (kind=dbl_kind), &
         dimension (nx_block,ny_block,n_isomx,max_blocks) :: &
-         fiso_ocn        
+         fiso_ocn
 
        ! internal
 
@@ -427,8 +427,7 @@
          enddo
          fsurfn_f = fcondtopn_f          ! surface heat flux (W/m^2)
          flatn_f(:,:,:,:) = c0           ! latent heat flux (kg/m2/s)
-
-         fiso_Qa(:,:,:,:)= 0.0006_dbl_kind   ! specific humidity (kg/kg)
+         fiso_Qa(:,:,:,:)= 0.0006_dbl_kind   ! specific humidity (kg/kg
       else
          !typical summer values
          potT  (:,:,:) = 273.0_dbl_kind  ! air potential temp (K)
@@ -446,11 +445,10 @@
          enddo
          fcondtopn_f(:,:,:,:) = 0.0_dbl_kind ! conductive heat flux (W/m^2)
          flatn_f(:,:,:,:) = -2.0_dbl_kind    ! latent heat flux (W/m^2)
-
-         fiso_Qa(:,:,:,:)= 0.0035_dbl_kind   ! specific humidity (kg/kg)
+         fiso_Qa(:,:,:,:)= 0.0035_dbl_kind   ! specific humidity (kg/kg
       endif !     l_winter
 
-      faero     (:,:,:,:) = c0           ! aerosol deposition rate (kg/m2/s)
+      faero (:,:,:,:) = c0            ! aerosol deposition rate (kg/m2/s) MH
       fiso_atm  (:,:,:,:) = c0           ! isotope deposition rate (kg/m2/s)
       fiso_rain (:,:,:,:) = c0           ! isotope rainfall rate from atm (kg/m2/s)
 
@@ -545,7 +543,6 @@
       fsalt   (:,:,:) = c0
       fhocn   (:,:,:) = c0
       fswthru (:,:,:) = c0
-
       fiso_ocn(:,:,:,:) = c0
 
       !-----------------------------------------------------------------
@@ -664,7 +661,7 @@
       fresh  (:,:,:)  = c0
       fsalt  (:,:,:)  = c0
       fhocn  (:,:,:)  = c0
-      fsoot(:,:,:,:)  = c0
+      fsoot  (:,:,:,:)  = c0
       fiso_ocn  (:,:,:,:)  = c0
       fswthru(:,:,:)  = c0
 
@@ -844,12 +841,13 @@
                                fiso_evap,            & 
                                Uref,                 &
                                Tref,     Qref,       &
-                               fiso_Qref,            &
+                               fiso_evap,            & 
                                fresh,    fsalt,      &
                                fiso_ocn,             &
                                fhocn,    fswthru,    &
                                melttn, meltsn, meltbn, congeln, snoicen, &
-                               meltt,  melts,  meltb,&
+                               meltt,  melts,  &
+                               meltb,                       &
                                congel,  snoice)
 
 !
@@ -983,7 +981,7 @@
 !EOP
 !
       integer (kind=int_kind) :: &
-          ij, i, j          ! horizontal indices
+          ij, i, j    ! horizontal indices
 
       !-----------------------------------------------------------------
       ! Merge fluxes
@@ -1084,7 +1082,7 @@
                                fiso_evap,          &
                                Uref,               &
                                Tref,     Qref,     &
-                               fiso_Qref,          &
+                               fiso_evap,          &
                                fresh,    fsalt,    &
                                fhocn,    fswthru,  &
                                fsoot,              &
@@ -1139,7 +1137,7 @@
 
       real (kind=dbl_kind), dimension(nx_block,ny_block,n_aeromx), &
           intent(inout):: &
-          fsoot
+          fsoot       ! 
 
       real (kind=dbl_kind), dimension(nx_block,ny_block,n_isomx), &
           intent(in):: &
@@ -1150,6 +1148,7 @@
           fiso_ocn,       &     ! 
           fiso_evap,      &     ! 
           fiso_Qref
+
 !
 !EOP
 !
@@ -1184,7 +1183,7 @@
             alidr   (i,j) = alidr   (i,j) * ar
             alvdf   (i,j) = alvdf   (i,j) * ar
             alidf   (i,j) = alidf   (i,j) * ar
-            fsoot (i,j,:) = fsoot (i,j,:) * ar
+            fsoot   (i,j,:) = fsoot (i,j,:) * ar
             fiso_ocn    (i,j,:) = fiso_ocn  (i,j,:) * ar
             fiso_evap   (i,j,:) = fiso_evap (i,j,:) * ar
             fiso_Qref   (i,j,:) = fiso_Qref (i,j,:) * ar
@@ -1203,7 +1202,7 @@
             fresh   (i,j) = c0
             fsalt   (i,j) = c0
             fhocn   (i,j) = c0
-            fsoot (i,j,:) = c0
+            fsoot   (i,j,:) = c0
             fiso_ocn    (i,j,:) = c0
             fiso_evap   (i,j,:) = c0
             fiso_Qref   (i,j,:) = fiso_Qa(i,j,:)

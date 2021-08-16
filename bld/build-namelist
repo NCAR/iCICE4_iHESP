@@ -435,10 +435,14 @@ add_default($nl, 'shortwave');
 if ($cam4) {
     add_default($nl, 'dT_mlt_in'   , 'cam4'=>'.true.');
     add_default($nl, 'rsnw_melt_in', 'cam4'=>'.true.');
+    add_default($nl, 'R_ice'       , 'cam4'=>'.true.');
+    add_default($nl, 'R_pnd'       , 'cam4'=>'.true.');
     add_default($nl, 'R_snw'       , 'cam4'=>'.true.');
 } else {
     add_default($nl, 'dT_mlt_in'   );
     add_default($nl, 'rsnw_melt_in');
+    add_default($nl, 'R_ice'       );
+    add_default($nl, 'R_pnd'       );
     add_default($nl, 'R_snw'       );
 }    
 add_default($nl, 'kitd');
@@ -448,6 +452,7 @@ add_default($nl, 'krdg_partic');
 add_default($nl, 'krdg_redist');
 add_default($nl, 'evp_damping');
 add_default($nl, 'advection');
+add_default($nl, 'fsnowrdg');
 
 ##################################
 # namelist group: tracer_nml     #

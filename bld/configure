@@ -81,8 +81,8 @@ OPTIONS
      -ntasks <n>         Number of MPI tasks.  
      -nthreads <n>       Number of OMP threads per process.  Setting nthreads > 0 implies smp.
      -nodecomp           Turns off the generation of cice decomposition (default: not defined - decomp is generated)
-     -ntr_aero <n>       Turns on aerosol tracers (valid values are 0,1,2,3,4,5,6, default is 3)
-     -ntr_iso <n>       Turns on isotope tracers (valid values are 0,1,2,3,4,5,6, default is 3)
+     -ntr_aero <n>       Turns on aerosal tracers (valid values are 0,1,2,3,4,5,6, default is 3)
+     -ntr_iso <n>        Turns on isotope tracers (valid values are 0,1,2,3,4,5,6, default is 3)
      -silent [or -s]     Turns on silent mode - only fatal messages issued.
      -verbose [or -v]    Turn on verbose echoing of settings made by configure.
      -version            Echo the CVS tag name used to check out this CICE distribution.
@@ -310,9 +310,9 @@ if (defined $opts{'ntr_iso'}) {
     $cfg_ref->set('ntr_iso', $opts{'ntr_iso'});
 } else {
     if ($cice_mode eq 'prescribed') {
-	$cfg_ref->set('ntr_iso', 0);
+    $cfg_ref->set('ntr_iso', 0);
     } else {
-	$cfg_ref->set('ntr_iso', 3);
+    $cfg_ref->set('ntr_iso', 3);
     }
 }
 

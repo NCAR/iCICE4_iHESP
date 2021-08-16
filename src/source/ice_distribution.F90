@@ -55,7 +55,7 @@
    integer (int_kind), public, parameter ::  &    ! types of blocks:
          lndType     = 0,                    &    ! 	Land
          icefreeType = 1,                    &    !     ice free (ocean only)
-         iceType     = 2                          !     sea ice 
+         iceType     = 2                          !     sea ice
 
 !    integer, parameter :: numCoeff = 5
 
@@ -81,7 +81,6 @@
 !BOC
 !EOC
 !***********************************************************************
-
  contains
 
 !***********************************************************************
@@ -97,7 +96,7 @@
 !  by call the appropriate subroutine based on distribution type
 !  requested.  Currently three distributions are supported:
 !  2-d Cartesian distribution (cartesian), a load-balanced
-!  distribution using a rake algorithm based on an input amount of work 
+!  distribution using a rake algorithm based on an input amount of work
 !  per block, and a space-filling-curve algorithm.
 !
 ! !REVISION HISTORY:
@@ -124,7 +123,7 @@
    integer (int_kind), dimension(:), intent(in) :: &
       blockType             ! type of block
 
-   real (dbl_kind), dimension(:,:), intent(in)  :: bStats  ! block statistics 
+   real (dbl_kind), dimension(:,:), intent(in)  :: bStats  ! block statistics
 
    logical, intent(in) :: FixMaxBlock
    real (real_kind), intent(in) :: maxDil
@@ -188,7 +187,7 @@
 
    end select
 
-   if(my_task == master_task) then 
+   if(my_task == master_task) then
       write(nu_diag,*) ' '
       nc = 0
       do n = 1,nprocs
@@ -753,7 +752,7 @@
 
    integer (int_kind), dimension(:), allocatable :: &
       proc_tmp           ! temp processor id
-   
+
    integer (int_kind) :: pid,n
 
 !----------------------------------------------------------------------
@@ -798,7 +797,7 @@
 
    do j=1,nblocks_y
    do i=1,nblocks_x
-      
+
       globalID = globalID + 1
 
       if (workPerBlock(globalID) /= 0) then
@@ -845,7 +844,7 @@
 !----------------------------------------------------------------------
 !EOC
  end function create_distrb_roundrobin
- 
+
 !***********************************************************************
 !BOP
 ! !IROUTINE: create_distrb_blkcart
@@ -895,7 +894,7 @@
 
    integer (int_kind), dimension(:), allocatable :: &
       proc_tmp           ! temp processor id
-   
+
    integer (int_kind) :: pid,n
 
 !----------------------------------------------------------------------
@@ -953,7 +952,7 @@
    cnt = 0
    do j2=1,nblocks_y
    do i2=1,nblocks_x/2
-      
+
       if (n == 1) then
          i = i2
          j = j2
@@ -1013,7 +1012,7 @@
 !----------------------------------------------------------------------
 !EOC
  end function create_distrb_blkcart
- 
+
 !***********************************************************************
 !BOP
 ! !IROUTINE: create_distrb_blkrobin
@@ -1065,7 +1064,7 @@
 
    logical (log_kind), dimension(:), allocatable :: &
       bfree              ! map of assigned blocks
-   
+
    integer (int_kind) :: pid,n,cnt, blktogether, i2, j2
    integer (int_kind) :: totblocks, nchunks
    logical (log_kind) :: keepgoing
@@ -1133,7 +1132,7 @@
    blktogether = max(1,nint(float(totblocks)/float(6*nprocs)))
 
 !   write(nu_diag,*) 'ice_distrb_blkrobin totblocks = ',totblocks,nblocks_y*nblocks_x
- 
+
    !------------------------------
    ! southern group of blocks
    !   weave back and forth in i vs j
@@ -1309,7 +1308,7 @@
 !----------------------------------------------------------------------
 !EOC
  end function create_distrb_blkrobin
- 
+
 !***********************************************************************
 !BOP
 ! !IROUTINE: create_distrb_cart
@@ -1361,7 +1360,7 @@
 
    integer (int_kind), dimension(:), allocatable :: &
       proc_tmp           ! temp processor id
-   
+
    integer (int_kind) :: pid,n
 
 !----------------------------------------------------------------------
@@ -1387,7 +1386,7 @@
    else
       call proc_decomposition(nprocs, nprocsX, nprocsY)
    endif
-                                  
+
 
 !----------------------------------------------------------------------
 !
@@ -1410,7 +1409,7 @@
 
    do j=1,nprocsY
    do i=1,nprocsX
-      processor = (j-1)*nprocsX + i    ! number the processors 
+      processor = (j-1)*nprocsX + i    ! number the processors
                                          ! left to right, bot to top
 
       is = (i-1)*numBlocksXPerProc + 1   ! starting block in i
@@ -1493,7 +1492,7 @@
       pid = newDistrb%blockLocation(n)
       if(pid>0) then
         proc_tmp(pid) = proc_tmp(pid) + 1
-        if(proc_tmp(pid) <= max_blocks) then 
+        if(proc_tmp(pid) <= max_blocks) then
             newDistrb%blockIndex(pid,proc_tmp(pid)) = n
         endif
       endif
@@ -1571,7 +1570,7 @@
 !----------------------------------------------------------------------
 
    dist = create_distrb_cart(nprocs, workPerBlock)
-                                    
+
 !----------------------------------------------------------------------
 !
 !  if the number of blocks is close to the number of processors,
@@ -1670,7 +1669,7 @@
          call ice_distributionRake (workTmp, procTmp, workPerBlock, &
                                     priority, dist)
       end do
-   
+
       deallocate(workTmp, procTmp, stat=istat)
 
 
@@ -1745,7 +1744,7 @@
       if (pid > 0) then
          procTmp(pid) = procTmp(pid) + 1
          newDistrb%blockLocalID (n) = procTmp(pid)
-	 if(procTmp(pid) <= max_blocks) then 
+	 if(procTmp(pid) <= max_blocks) then
             newDistrb%blockIndex(pid,procTmp(pid)) = n
          endif
       else
@@ -1761,7 +1760,7 @@
       return
    endif
 
-   newDistrb%blockCnt(:) = procTmp(:) 
+   newDistrb%blockCnt(:) = procTmp(:)
 
    deallocate(procTmp, stat=istat)
 
@@ -1825,7 +1824,7 @@
       work_per_block        ! amount of work per block
 
    real(dbl_kind), dimension(:), intent(in) :: &
-      prob_per_block        ! probability sea-ice within block 
+      prob_per_block        ! probability sea-ice within block
 
    integer (int_kind), dimension(:), intent(in)  :: &
       blockType            ! type of block
@@ -1881,23 +1880,23 @@
       work_tmp           ,&! work per row or column for rake algrthm
       proc_tmp           ,&! temp processor id for rake algrthm
       block_count          ! counter to determine local block indx
- 
+
    integer (int_kind), allocatable, dimension(:) ::  &
           blockLocation,   &! block to processor mapping
           distance,        &! location in uncompressed SFC
-          type_on_curve,   &! type of blocks 
+          type_on_curve,   &! type of blocks
           work_on_curve
 
    type (distrb) :: dist  ! temp hold distribution
 
    integer (int_kind) :: numIce, minblocks
    type (factor_t) :: xdim, ydim
-   
+
    integer (int_kind) :: it,jj,i2,j2
    integer (int_kind) :: curveSize, sb_x, sb_y, itmp,numfac
    integer (int_kind) :: subNum,sfcNum
-   logical (log_kind) :: foundX 
-   
+   logical (log_kind) :: foundX
+
    integer (int_kind) :: ns,ntmp
    integer (int_kind) :: numLocalBlocks
 
@@ -1905,12 +1904,12 @@
        Cost_per_proc , &
        Cost_per_block
 
-   real (dbl_kind), allocatable, dimension(:,:) :: cStats  ! block statistics on SFC curve 
+   real (dbl_kind), allocatable, dimension(:,:) :: cStats  ! block statistics on SFC curve
 
    integer (int_kind), allocatable, dimension(:) :: work_per_proc,work_per_block2
-   integer (int_kind) :: ierr  ! error return code 
+   integer (int_kind) :: ierr  ! error return code
 
-   character(len=char_len) :: partitioning_type 
+   character(len=char_len) :: partitioning_type
    logical, parameter :: verbose = .FALSE.
 !------------------------------------------------------
 ! Space filling curves only work if:
@@ -1918,7 +1917,7 @@
 !    nblocks_x = nblocks_y
 !       nblocks_x = 2^m 3^n 5^p where m,n,p are integers
 !------------------------------------------------------
-   
+
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #1: nblocks_x,nblocks_y: ',nblocks_x,nblocks_y
    if((.not. IsFactorable(nblocks_y)) .or. (.not. IsFactorable(nblocks_x))) then
      if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #1.1'
@@ -1949,8 +1948,8 @@
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #3'
 
    !--------------------------------------
-   ! determine the size of the sub-blocks 
-   ! within the space-filling curve 
+   ! determine the size of the sub-blocks
+   ! within the space-filling curve
    !--------------------------------------
    sb_x = ProdFactor(xdim)
    sb_y = ProdFactor(ydim)
@@ -1992,7 +1991,7 @@
    Mesh  = 0
    Mesh2 = 0
 !----------------------------------------------------------------------
-!  Cost function estimation... this is a potential replace for work_per_block 
+!  Cost function estimation... this is a potential replace for work_per_block
 !----------------------------------------------------------------------
    allocate(Cost_per_proc(nblocks_tot))
    allocate(Cost_per_block(nblocks_tot))
@@ -2018,7 +2017,7 @@
    endif
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #8.2'
    !-----------------------------------------------
-   ! Reindex the SFC to address internal sub-blocks  
+   ! Reindex the SFC to address internal sub-blocks
    !-----------------------------------------------
    do j=1,curveSize
    do i=1,curveSize
@@ -2062,18 +2061,18 @@
          ii=ii+1
 !         Mesh3(idxT_i(i),idxT_j(i)) = ii
          n = (idxT_j(i)-1)*nblocks_x + idxT_i(i)
-         Lindx2(n) = ii 
+         Lindx2(n) = ii
       endif
    enddo
    nblocks=ii
-!DBG   if(my_task == 0) then 
+!DBG   if(my_task == 0) then
 !DBG     write(nu_diag,*) 'work_per_block2:',work_per_block2
 !DBG   endif
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #11'
-   allocate(cStats(numCoeff,nblocks)) 
+   allocate(cStats(numCoeff,nblocks))
    do i=1,nblocks_tot
-      if(Lindx2(i)>0) then 
-         work_on_curve(Lindx2(i)) = work_per_block2(i) 
+      if(Lindx2(i)>0) then
+         work_on_curve(Lindx2(i)) = work_per_block2(i)
          type_on_curve(Lindx2(i))  = blockType(i)
          cStats(:,Lindx2(i)) = bStats(:,i)
          distance(Lindx2(i)) = Lindx(i)
@@ -2081,34 +2080,34 @@
    enddo
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #12'
 
-   if(lprint_stats) then 
+   if(lprint_stats) then
       fname = 'WorkPerBlock.bin'
-      call WriteIntegerArray(fname,nblocks,work_on_curve) 
+      call WriteIntegerArray(fname,nblocks,work_on_curve)
 !DBG     write(nu_diag,*) 'work_per_block2:',work_per_block2
 !DBG     write(nu_diag,*) 'work_on_curve:', work_on_curve(1:nblocks)
 !     open(nu_timing,file='WorkPerBlock.bin',recl=4*nblocks, &
 !          form = 'unformatted', access='direct',status='unknown')
 !     write(nu_timing,rec=1) work_on_curve(1:nblocks)
 !     close(nu_timing)
-   endif 
+   endif
 
-   if(lprint_stats) then 
+   if(lprint_stats) then
       call WriteProbabilityStats(bStats,nblocks_tot)
    endif
-     
+
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #13'
 
    maxB=MIN(max_blocks,maxBlock)
    partitioning_type = 'weight'
    select case(partitioning_type)
-      case ('type') 
+      case ('type')
          ! KLUDGE this is just for testing need to come up with a general solution
          numIce     = COUNT(blockType .eq. iceType)
          minblocks  = CEILING(REAL(numIce)/REAL(nprocs),kind=int_kind)
-         !   write(nu_diag,*) 'before TypePartition: {minblocks,maxblocks}: ',minblocks,maxB 
+         !   write(nu_diag,*) 'before TypePartition: {minblocks,maxblocks}: ',minblocks,maxB
          call  TypePartition(type_on_curve,minblocks,maxB,blockLocation)
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #14'
-         if(MAXVAL(blockLocation) > nprocs) then 
+         if(MAXVAL(blockLocation) > nprocs) then
               write(nu_diag,*) 'ERROR: problem with partitioning: insufficient processors'
          endif
          ! re-index blockLocation from curve to physical ordering
@@ -2122,16 +2121,16 @@
 		blockLocation(1:nblocks),distance(1:nblocks), nprocs,minBlock, maxB,cStats,FixMaxBlock, maxDil, ierr)
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #17'
 !DBG         write(nu_diag,*) 'After PartitionCurve:'
-         if(ierr < 0) then 
+         if(ierr < 0) then
              call abort_ice('create_distrb_spacecurve: PartitionCurve failed')
-         endif 
+         endif
 !DBG         write(nu_diag,*) 'before broadcast_array:'
          call broadcast_array(blockLocation,master_task)
 !DBG         write(nu_diag,*) 'After broadcast_array'
          ! re-index blockLocation from curve to physical ordering
          numLocalBlocks=0
          do i=1,nblocks_tot
-             if(Lindx2(i)>0) then  
+             if(Lindx2(i)>0) then
                 dist%blockLocation(i) = blockLocation(Lindx2(i))
                 numLocalBlocks=numLocalBlocks+1
              endif
@@ -2141,7 +2140,7 @@
 !   write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: dist%blockLocation(:)', dist%blockLocation(1:nblocks_tot)
 !   write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: dist%blockLocation(1:numLocalBlocks)', &
 !        dist%blockLocation(1:numLocalBlocks)
-  
+
 !   call ConvertStatsBlock2Proc(dist%blockLocation,bStats,cStats)
 !DBG   write(nu_diag,*) 'Before call to BuildProbabilityStats2'
    call BuildProbabilityStats2(dist%blockLocation,cStats)
@@ -2153,9 +2152,9 @@
 !DBG   write(nu_diag,*) 'after WriteProbabilityStats'
 
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #20'
-   if(lprint_stats) then 
+   if(lprint_stats) then
       fname = 'Q.bin'
-      call WriteIntegerArray(fname,nblocks_tot,dist%blockLocation) 
+      call WriteIntegerArray(fname,nblocks_tot,dist%blockLocation)
 
       fname = 'Cost.bin'
       call WriteDblArray(fname,nprocs,Cost_per_proc)
@@ -2163,7 +2162,7 @@
       fname = 'perfm.bin'
       call WriteDblArray(fname,numCoeff,perfmodel)
    endif
-   
+
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #21'
 
 !----------------------------------------------------------------------
@@ -2179,24 +2178,24 @@
       if(pid>0) then
         proc_tmp(pid) = proc_tmp(pid) + 1
         dist%blockLocalID(n) = proc_tmp(pid)
-        if(proc_tmp(pid) <= max_blocks) then 
+        if(proc_tmp(pid) <= max_blocks) then
             dist%blockIndex(pid,proc_tmp(pid)) = n
         endif
       endif
    enddo
-   dist%blockCnt(:) = proc_tmp(:) 
+   dist%blockCnt(:) = proc_tmp(:)
 
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #22'
    !---------------------------------------
    ! Set the number of active local blocks
    !---------------------------------------
    dist%numLocalBlocks = proc_tmp(my_task+1)
-   if (dist%numLocalBlocks>0) then 
+   if (dist%numLocalBlocks>0) then
       allocate(dist%blockGlobalID(dist%numLocalBlocks))
       localID=1
       do n=1,nblocks_tot
          pid = dist%blockLocation(n)
-         if(pid == my_task+1) then 
+         if(pid == my_task+1) then
               dist%blockGlobalID(localID) = n
               localID=localID+1
          endif
@@ -2208,48 +2207,48 @@
       write(nu_diag,*) 'IAM: ',my_task,' SpaceCurve: Number of blocks {total,local} :=', &
                 nblocks_tot,nblocks,proc_tmp(my_task+1)
    endif
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate block'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate block'
    !---------------------------------
    ! Deallocate temporary arrays
    !---------------------------------
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(blockLocation)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(blockLocation)'
    deallocate(blockLocation)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(type_on_curve)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(type_on_curve)'
    deallocate(type_on_curve)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(work_on_curve)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(work_on_curve)'
    deallocate(work_on_curve)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(proc_tmp)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(proc_tmp)'
    deallocate(proc_tmp)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(Mesh,Mesh2)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(Mesh,Mesh2)'
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #24'
    deallocate(Mesh,Mesh2)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(idxT_i,idxT_j,Lindx,Lindx2)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(idxT_i,idxT_j,Lindx,Lindx2)'
    deallocate(idxT_i,idxT_j,Lindx,Lindx2)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(Cost_per_proc)'  
-   deallocate(Cost_per_proc) 
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(Cost_per_block)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(Cost_per_proc)'
+   deallocate(Cost_per_proc)
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(Cost_per_block)'
    deallocate(Cost_per_block)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(work_per_proc)'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(work_per_proc)'
    deallocate(work_per_proc)
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(work_per_block2)'  
-   deallocate(work_per_block2)  
-    
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before deallocate(work_per_block2)'
+   deallocate(work_per_block2)
+
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #25'
-   if(verbose .and. my_task == 0) then 
+   if(verbose .and. my_task == 0) then
       write(nu_diag,*) 'create_distrb_spacecurve: blockCnt ',dist%blockCnt
       write(nu_diag,*) 'create_distrb_spacecurve: blockIndex ',dist%blockIndex
    endif
 
-!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before assignment of result'  
+!DBG   write(nu_diag,*) 'create_distrb_spacecurve: before assignment of result'
 !----------------------------------------------------------------------
    create_distrb_spacecurve = dist  ! return the result
 !----------------------------------------------------------------------
 
-   if (verbose .and. my_task==0) then 
+   if (verbose .and. my_task==0) then
       write(nu_diag,*) 'create_distrb_spacecurve%blockGlobalID:  ',create_distrb_spacecurve%blockGlobalID
       write(nu_diag,*) 'create_distrb_spacecurve%blockCnt: ',create_distrb_spacecurve%blockCnt
    endif
-!DBG   write(nu_diag,*) 'At the end of create_distrb_spacecurve'  
+!DBG   write(nu_diag,*) 'At the end of create_distrb_spacecurve'
    if(verbose) write(nu_diag,*) 'IAM: ',my_task,'create_distrb_spacecurve: point #26'
 !EOC
 
@@ -2258,11 +2257,11 @@
  subroutine TypePartition(blockType,minblocks,maxblocks,blockLocation)
 
    integer(kind=int_kind), intent(in)     :: blockType(nblocks_tot)
-   integer, intent(in)  :: minblocks, & ! Minimum number of blocks per processor 
-                           maxblocks    ! Maximum number of blocks per processor 
+   integer, intent(in)  :: minblocks, & ! Minimum number of blocks per processor
+                           maxblocks    ! Maximum number of blocks per processor
    integer(kind=int_kind), intent(inout)  :: blockLocation(nblocks_tot)
 
-   integer :: i,ip,cur,next 
+   integer :: i,ip,cur,next
    integer :: cntLnd,tcntLnd, &
               cntIcefree,tcntIcefree, &
               cntIce,tcntIce
@@ -2277,23 +2276,23 @@
    ip = 1
    do i=1,nblocks_tot
       cur  = blockType(i)
-      if(i<nblocks_tot) then 
+      if(i<nblocks_tot) then
          next = blockType(i+1)
       else
          next = cur
       endif
 
-      !------------ 
-      ! Land point 
-      !------------ 
-      if(cur == lndType) then 
+      !------------
+      ! Land point
+      !------------
+      if(cur == lndType) then
           tcntLnd = tcntLnd + 1
       endif
 
      !----------------------
      ! ice Free  point
      !----------------------
-     if (cur == icefreeType) then 
+     if (cur == icefreeType) then
         tcntIcefree = tcntIcefree + 1
         cntIcefree = cntIcefree + 1
         blockLocation(i) = ip
@@ -2307,7 +2306,7 @@
      !----------------------
      ! ice Free  point
      !----------------------
-     if (cur == iceType) then 
+     if (cur == iceType) then
         tcntIce = tcntIce + 1
         cntIce  = cntIce + 1
         blockLocation(i) = ip
@@ -2318,17 +2317,17 @@
      endif
    enddo
 
-   if(my_task == 0) then 
+   if(my_task == 0) then
       write(*,23) tcntLnd+tcntIce+tcntIcefree, tcntIce, tcntIcefree, tcntLnd
 !      write(nu_diag,*) 'TypePartition: land blks: ',tcntLnd,' Ice blks: ', &
 !                tcntIce,' IceFree blks: ',tcntIcefree
-      write(*,24) MAXVAL(blockLocation) 
+      write(*,24) MAXVAL(blockLocation)
 !      write(nu_diag,*) 'TypePartition: Partitioned across ',MAXVAL(blockLocation),' processors'
    endif
-  
+
 23   format('Total blocks: ',i5,' Ice blocks: ',i5,' IceFree blocks: ',i5,' Land blocks: ',i5)
 24   format('Partitioned across ',i5,' processors')
-  
+
 
  end subroutine TypePartition
 
@@ -2342,7 +2341,7 @@
     integer (int_kind), intent(in)    :: nproc
     integer (int_kind), intent(in)    :: min_blocks
     integer (int_kind), intent(in)    :: max_blocks
-    real    (dbl_kind), intent(in)    :: Stats(:,:) 
+    real    (dbl_kind), intent(in)    :: Stats(:,:)
     logical,            intent(in)    :: FixMaxBlock
     real    (real_kind), intent(in)   :: maxDil
     integer (int_kind), intent(inout) :: ierr
@@ -2364,10 +2363,10 @@
 
     logical, parameter :: verbose = .TRUE.
     integer :: it,maxiter
-    integer :: save_maxB 
+    integer :: save_maxB
     real :: save_maxCost
-    
-    integer :: aminBlocks, amaxBlocks 
+
+    integer :: aminBlocks, amaxBlocks
 
     real :: aWork,minWork,maxWork,maxWorkBlock
     real :: minCostBlock, maxCostBlock
@@ -2375,7 +2374,7 @@
     real (real_kind) :: amaxDil
     real (dbl_kind), allocatable, dimension(:) :: cost_per_proc
     real (dbl_kind), allocatable, dimension(:) :: cost_per_block
-    real (dbl_kind), allocatable, dimension(:,:) :: pStats 
+    real (dbl_kind), allocatable, dimension(:,:) :: pStats
 
 
     allocate(pStats(numCoeff,nblocks_tot))
@@ -2383,7 +2382,7 @@
     maxB=max_blocks
 !    maxDil = 5.0
 
-    if ( my_task .eq. master_task) then  
+    if ( my_task .eq. master_task) then
 
        nb = SIZE(blockLocation)  ! number of blocks
        allocate(saveblockLocation(nb))
@@ -2391,7 +2390,7 @@
        allocate(cost_per_block(nb))
 
        ! --------------------------------------------
-       ! Estimate the computational cost of each block  
+       ! Estimate the computational cost of each block
        ! --------------------------------------------
        call EstimateCost(Stats,nb,cost_per_block)
 
@@ -2416,10 +2415,10 @@
           ierr = -2
           return
        endif
-       if(FixMaxBlock) then 
+       if(FixMaxBlock) then
          minB = maxB
        endif
-       do while (maxB  >= minB )  
+       do while (maxB  >= minB )
 
           dtCost = 1.0
           maxValue = maxCostBlock*real(maxB)
@@ -2438,9 +2437,9 @@
             call ConvertStatsBlock2Proc(blockLocation,Stats,pStats)
             call EstimateCost(pStats,anProc,cost_per_proc)
             maxCost = MAXVAL(cost_per_proc)
-   
 
-            if(lprint_stats) then 
+
+            if(lprint_stats) then
 		write(nu_diag,211) it,anProc,aminBlocks,amaxBlocks,maxB,minValue, maxValue,maxCost, amaxDil
             endif
 
@@ -2460,7 +2459,7 @@
             if ((save_maxCost > maxCost .and. amaxBlocks <= maxB) .or. &
                 (save_maxCost == maxCost .and. save_maxB > maxB)  ) then
                 save_maxCost = maxCost
-                save_maxB = maxB  
+                save_maxB = maxB
                 saveblockLocation = blockLocation
             endif
             it=it+1
@@ -2471,12 +2470,12 @@
        write(nu_diag,214) perfmodel_name
 
        write(nu_diag,*) '-------------------------wSFC-----------------------'
-       call PrintPartitionLB(blockLocation,nproc,Stats) 
+       call PrintPartitionLB(blockLocation,nproc,Stats)
 
  211 format('Partition loop: it: ',i4,' anProc: ',i4,' a{min,max}Blocks ', &
-              2(i4),' maxB: ',i4,' [min,max]Value: ',2(f14.4),' maxCost: ',f14.4,' maxDilation: ',f14.4 )  
+              2(i4),' maxB: ',i4,' [min,max]Value: ',2(f14.4),' maxCost: ',f14.4,' maxDilation: ',f14.4 )
  213 format('PartitionCurve: TotalCost: ',f12.4,' avgCost: ',f12.4, &
-	    ' minBlockCost: ',f12.4,' maxBlockCost: ',f12.4 ) 
+	    ' minBlockCost: ',f12.4,' maxBlockCost: ',f12.4 )
  214 format('Using performance model: ',a20)
 
        deallocate(cost_per_proc)
@@ -2501,14 +2500,14 @@
     integer (int_kind), intent(in) :: max_blocks
     real (real_kind), intent(in) :: maxvalue
     real (real_kind), intent(in)  :: maxDil    ! maximum alloable dilation of domains
-    integer (int_kind), intent(inout) :: aminBlocks, amaxBlocks 
+    integer (int_kind), intent(inout) :: aminBlocks, amaxBlocks
     real (real_kind), intent(out) :: amaxDil
 
     integer (int_kind)  :: n,ip,i,numB
     real :: totalCost,avgCost,sumTMP,sumTMP2
-    
+
 !   integer (int_kind), allocatable :: work_per_proc(:)
-    
+
     integer :: minDist,Dist
     integer :: sloc
     real    :: dilation, dilation2
@@ -2559,7 +2558,7 @@
         if(amaxDil < dilation) amaxDil = dilation
         ip = ip+1
     enddo
-    
+
 !    call abort_ice('wPartition: at the end of the subroutine')
 
   end subroutine wPartition
@@ -2616,7 +2615,7 @@
    integer (int_kind) :: &
       i, n,                  &! dummy loop indices
       np1,                   &! n+1 corrected for cyclical wrap
-      iproc, inext,          &! processor ids for current and next 
+      iproc, inext,          &! processor ids for current and next
       nprocs, numBlocks,   &! number of blocks, processors
       lastPriority,          &! priority for most recent block
       minPriority,           &! minimum priority
@@ -2730,11 +2729,11 @@ end subroutine ice_distributionRake
 
       integer :: Location(:)
       integer :: n
-      real (dbl_kind), dimension(:,:) :: bStats 
+      real (dbl_kind), dimension(:,:) :: bStats
 
       real :: maxCost,minCost
       integer :: anProc
-      integer :: minB, maxB 
+      integer :: minB, maxB
       real :: aCost
       real (dbl_kind), allocatable, dimension(:) :: cost_per_proc(:)
       integer :: i,ncnt
@@ -2743,8 +2742,8 @@ end subroutine ice_distributionRake
 
       allocate(cost_per_proc(n))
       allocate(pStats(numCoeff,n))
-      
-       
+
+
       call ConvertStatsBlock2Proc(Location,bStats,pStats)
       call EstimateCost(pStats,n,cost_per_proc)
 
@@ -2758,7 +2757,7 @@ end subroutine ice_distributionRake
       maxB=0
       minB=n
       do i=1,n
-           ncnt = COUNT(Location==i)  
+           ncnt = COUNT(Location==i)
            maxB = MAX(ncnt,maxB)
            minB = MIN(ncnt,minB)
       enddo
@@ -2811,8 +2810,8 @@ end subroutine ice_distributionRake
       pStats = 0.0d0
       do i=1,n
          ip = Location(i)
-         if(ip > 0) then 
-            pStats(:,ip) = pStats(:,ip) + bStats(:,i) 
+         if(ip > 0) then
+            pStats(:,ip) = pStats(:,ip) + bStats(:,i)
          endif
       enddo
 
@@ -2839,7 +2838,7 @@ end subroutine ice_distributionRake
      integer (int_kind) :: n
      integer (int_kind) :: array(:)
 
-     if(my_task == master_task) then 
+     if(my_task == master_task) then
         open(nu_timing,file=TRIM(fname),recl=4*n, &
           form = 'unformatted', access = 'direct', status = 'unknown')
         write(nu_timing,rec=1) array(1:n)
@@ -2853,7 +2852,7 @@ end subroutine ice_distributionRake
      real (dbl_kind) :: array(:)
      integer (int_kind) :: n
 
-     if(my_task == master_task) then 
+     if(my_task == master_task) then
         open(nu_timing,file=TRIM(fname),recl=8*n, &
           form = 'unformatted', access = 'direct', status = 'unknown')
         write(nu_timing,rec=1) array(1:n)
