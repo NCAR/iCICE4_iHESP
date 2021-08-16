@@ -427,7 +427,7 @@
          enddo
          fsurfn_f = fcondtopn_f          ! surface heat flux (W/m^2)
          flatn_f(:,:,:,:) = c0           ! latent heat flux (kg/m2/s)
-         fiso_Qa(:,:,:,:)= 0.0006_dbl_kind   ! specific humidity (kg/kg
+         fiso_Qa(:,:,:,:)= 0.0006_dbl_kind   ! specific humidity (kg/kg)
       else
          !typical summer values
          potT  (:,:,:) = 273.0_dbl_kind  ! air potential temp (K)
@@ -445,7 +445,7 @@
          enddo
          fcondtopn_f(:,:,:,:) = 0.0_dbl_kind ! conductive heat flux (W/m^2)
          flatn_f(:,:,:,:) = -2.0_dbl_kind    ! latent heat flux (W/m^2)
-         fiso_Qa(:,:,:,:)= 0.0035_dbl_kind   ! specific humidity (kg/kg
+         fiso_Qa(:,:,:,:)= 0.0035_dbl_kind   ! specific humidity (kg/kg)
       endif !     l_winter
 
       faero (:,:,:,:) = c0            ! aerosol deposition rate (kg/m2/s) MH
@@ -841,7 +841,7 @@
                                fiso_evap,            & 
                                Uref,                 &
                                Tref,     Qref,       &
-                               fiso_evap,            & 
+                               fiso_Qref,            & 
                                fresh,    fsalt,      &
                                fiso_ocn,             &
                                fhocn,    fswthru,    &
@@ -1082,7 +1082,7 @@
                                fiso_evap,          &
                                Uref,               &
                                Tref,     Qref,     &
-                               fiso_evap,          &
+                               fiso_Qref,          &
                                fresh,    fsalt,    &
                                fhocn,    fswthru,  &
                                fsoot,              &

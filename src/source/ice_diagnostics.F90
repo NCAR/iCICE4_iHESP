@@ -165,7 +165,7 @@
          delein, werrn, herrn, msltn, delmsltn, serrn, &
          deleis, werrs, herrs, mslts, delmslts, serrs, &
          ftmp,faeron,faeros,fsootn,fsoots, &
-         fison, fisos, fiso_ocnn fiso_ocns
+         fison, fisos, fiso_ocnn, fiso_ocns
 
 ! MH for aerosol diagnostics
       integer (kind=int_kind) :: &

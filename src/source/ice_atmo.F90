@@ -110,7 +110,7 @@
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_isomx), &
          intent(in) :: &
-         fiso_Qa      ! specific humidity (kg/kg
+         fiso_Qa      ! specific humidity (kg/kg)
 
       real (kind=dbl_kind), dimension (nx_block,ny_block), &
          intent(inout) :: &
@@ -209,7 +209,7 @@
          delq(i,j) = c0
          shcoef(i,j) = c0
          lhcoef(i,j) = c0
-         fiso_Qref(i,j,:) = c
+         fiso_Qref(i,j,:) = c0
       enddo
       enddo
 
