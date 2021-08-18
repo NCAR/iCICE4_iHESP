@@ -109,7 +109,7 @@ def buildcpp(case):
     nbgclyr = set_nondefault_cpp(cice_config_opts, "nbgclyr", nbgclyr)
 
     # set isotope tracer
-    ntr_iso = 0
+    ntr_iso = 3
     ntr_iso = set_nondefault_cpp(cice_config_opts, "ntr_iso", ntr_iso)
 
     # set age tracer

@@ -173,7 +173,7 @@
            f_alvl      = 'mxxxx', f_vlvl       = 'mxxxx', &
            f_FY        = 'mxxxx',                         &
            f_aeron     = 'xxxxx', f_aero       = 'xxxxx', &
-           f_ison     = 'xxxxx', f_iso       = 'xxxxx', &
+           f_ison      = 'xxxxx', f_iso        = 'xxxxx', &
            f_apond     = 'xxxxx', f_apondn     = 'xxxxx', &
            f_hisnap    = 'mxxxx', f_aisnap     = 'mxxxx', &
            f_aicen     = 'mxxxx', f_vicen      = 'mxxxx', &
@@ -281,7 +281,7 @@
            f_ardg,      f_vrdg     , &
            f_alvl,      f_vlvl     , &
            f_aeron,     f_aero     , &
-           f_ison,     f_iso     , &
+           f_ison,      f_iso      , &
            f_FY                    , &
            f_apond,     f_apondn   , &
            f_hisnap,    f_aisnap   , &
@@ -416,7 +416,6 @@
          f_iso      = 'xxxxx' 
          f_ison     = 'xxxxx'
       endif
-
 
       ! these must be output at the same frequency because of 
       ! cos(zenith angle) averaging
@@ -1602,7 +1601,6 @@
          enddo
       endif
 
-
       ! Level and Ridged ice
       if (f_alvl(1:1) /= 'x') &
          call define_hist_field(n_alvl,"alvl","1",tstr, tcstr, &
@@ -2288,7 +2286,6 @@
         endif
 
         ! Isotopes
-
         if (f_fiso_atm(1:1) /= 'x') then
            do n=1,n_iso
               call accum_hist_field(n_fiso_atm(n,:), iblk, &

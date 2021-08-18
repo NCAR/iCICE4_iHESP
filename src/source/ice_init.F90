@@ -13,7 +13,7 @@
 ! authors Elizabeth C. Hunke and William H. Lipscomb, LANL
 !         C. M. Bitz, UW
 !
-! 2004 WHL: Block structure added 
+! 2004 WHL: Block structure added
 ! 2006 ECH: Added namelist variables, warnings.
 !           Replaced old default initial ice conditions with 3.14 version.
 !           Converted to free source form (F90).
@@ -79,7 +79,7 @@
           atm_data_type,   atm_data_dir,  precip_units, &
           atm_data_format, ocn_data_format, &
           sss_data_type,   sst_data_type, ocn_data_dir, &
-          oceanmixed_file, restore_sst,   trestore 
+          oceanmixed_file, restore_sst,   trestore
       use ice_grid, only: grid_file, kmt_file, grid_type, grid_format, &
                           gridcpl_file
       use ice_mechred, only: kstrength, krdg_partic, krdg_redist
@@ -89,6 +89,7 @@
                                shortwave, albedo_type, R_ice, R_pnd, &
                                R_snw, dT_mlt_in, rsnw_melt_in
       use ice_atmo, only: atmbndy, calc_strair
+      use ice_mechred, only: fsnowrdg
       use ice_transport_driver, only: advection
       use ice_state, only: nt_Tsfc, nt_iage, nt_FY, nt_volpn, nt_aero, &
                            tr_aero, tr_iage, tr_FY, tr_pond, nt_iso, tr_iso, &
@@ -145,7 +146,7 @@
         kitd,           kdyn,            ndte,                          &
         evp_damping,    yield_curve,                                    &
         kstrength,      krdg_partic,     krdg_redist,   advection,      &
-        heat_capacity,  shortwave,       albedo_type,                   &
+        fsnowrdg,       heat_capacity,   shortwave,     albedo_type,    &
         albicev,        albicei,         albsnowv,      albsnowi,       &
         R_ice,          R_pnd,           R_snw,                         &
         dT_mlt_in,      rsnw_melt_in,                                   &
@@ -154,15 +155,15 @@
         precip_units,   Tfrzpt,          update_ocn_f,                  &
         oceanmixed_ice, ocn_data_format, sss_data_type, sst_data_type,  &
         ocn_data_dir,   oceanmixed_file, restore_sst,   trestore,       &
-        restore_ice    
+        restore_ice
 
       namelist /tracer_nml/    &
         tr_iage, restart_age,  &
         tr_FY,   restart_FY,   &
         tr_lvl,  restart_lvl,  &
         tr_pond, restart_pond, &
-        tr_iso, restart_iso  , &
-        tr_aero, restart_aero 
+        tr_iso,  restart_iso , &
+        tr_aero, restart_aero         !MH for soot
 
       !-----------------------------------------------------------------
       ! default values
@@ -173,9 +174,9 @@
       istep0 = 0             ! no. of steps taken in previous integrations,
                              ! real (dumped) or imagined (to set calendar)
 #ifndef CCSMCOUPLED
-      dt = 3600.0_dbl_kind   ! time step, s 
+      dt = 3600.0_dbl_kind   ! time step, s
 #endif
-      npt = 99999            ! total number of time steps (dt) 
+      npt = 99999            ! total number of time steps (dt)
       diagfreq = 24          ! how often diag output is written
       print_points = .false. ! if true, print point data
       print_global = .true.  ! if true, print global diagnostic data
@@ -226,6 +227,7 @@
       krdg_partic = 1        ! 1 = new participation, 0 = Thorndike et al 75
       krdg_redist = 1        ! 1 = new redistribution, 0 = Hibler 80
       advection  = 'remap'   ! incremental remapping transport scheme
+      fsnowrdg   = p5        ! snow fraction that survives in ridging
       shortwave = 'default'  ! or 'dEdd' (delta-Eddington)
       albedo_type = 'default'! or 'constant'
       heat_capacity = .true. ! nonzero heat capacity (F => 0-layer thermo)
@@ -273,7 +275,7 @@
 #endif
 
       !-----------------------------------------------------------------
-      ! extra tracers (no longer namelist variables set in ice_domain_size)  
+      ! extra tracers (no longer namelist variables set in ice_domain_size)
       !-----------------------------------------------------------------
 
       tr_iage      = .false. ! ice age
@@ -288,8 +290,8 @@
       tr_pond      = .false. ! explicit melt ponds
       restart_pond = .false. ! melt ponds restart
       filename_volpn = 'none'
-      tr_aero      = .false. ! aerosols
-      restart_aero = .false. ! aerosol restart
+      tr_aero      = .false. ! aerosols          MH
+      restart_aero = .false. ! aerosol restart   MH
       filename_aero = 'none'
       tr_iso      = .false.  ! isotopes
       restart_iso = .false.
@@ -316,12 +318,13 @@
          do while (nml_error > 0)
             print*,'Reading setup_nml'
             read(nu_nml, nml=setup_nml,iostat=nml_error)
-            print*,'Reading grid_nml'
+            print*,'Reading grid_nml', nml_error
             read(nu_nml, nml=grid_nml,iostat=nml_error)
-            print*,'Reading ice_nml'
+            print*,'Reading ice_nml', nml_error
             read(nu_nml, nml=ice_nml,iostat=nml_error)
-            print*,'Reading tracer_nml'
+            print*,'Reading tracer_nml', nml_error
             read(nu_nml, nml=tracer_nml,iostat=nml_error)
+            print*,'Done reading namelists', nml_error
          end do
          if (nml_error == 0) close(nu_nml)
       endif
@@ -424,7 +427,7 @@
       if (trim(atm_data_type) == 'monthly' .and. calc_strair) &
          calc_strair = .false.
 
-      if (trim(atm_data_type) == 'hadgem' .and. & 
+      if (trim(atm_data_type) == 'hadgem' .and. &
              trim(precip_units) /= 'mks') then
          if (my_task == master_task) &
          write (nu_diag,*) &
@@ -488,6 +491,7 @@
       call broadcast_scalar(krdg_partic,        master_task)
       call broadcast_scalar(krdg_redist,        master_task)
       call broadcast_scalar(advection,          master_task)
+      call broadcast_scalar(fsnowrdg,           master_task)
       call broadcast_scalar(shortwave,          master_task)
       call broadcast_scalar(albedo_type,        master_task)
       call broadcast_scalar(heat_capacity,      master_task)
@@ -635,6 +639,7 @@
                                krdg_redist
          write(nu_diag,1030) ' advection                 = ', &
                                trim(advection)
+         write(nu_diag,1000) ' fsnowrdg                  = ', fsnowrdg
          write(nu_diag,1030) ' shortwave                 = ', &
                                trim(shortwave)
          write(nu_diag,1030) ' albedo_type               = ', &
@@ -648,7 +653,7 @@
          write(nu_diag,1000) ' albicei                   = ', albicei
          write(nu_diag,1000) ' albsnowv                  = ', albsnowv
          write(nu_diag,1000) ' albsnowi                  = ', albsnowi
-         write(nu_diag,1010) ' heat_capacity             = ', & 
+         write(nu_diag,1010) ' heat_capacity             = ', &
                                heat_capacity
          write(nu_diag,1030) ' atmbndy                   = ', &
                                trim(atmbndy)
@@ -667,7 +672,7 @@
                                trim(atm_data_dir)
             write(nu_diag,*) ' precip_units              = ', &
                                trim(precip_units)
-         endif 
+         endif
 
          write(nu_diag,1010) ' oceanmixed_ice            = ', &
                                oceanmixed_ice
@@ -679,7 +684,7 @@
              trim(sst_data_type) /= 'default') then
             write(nu_diag,*) ' ocn_data_dir              = ', &
                                trim(ocn_data_dir)
-         endif 
+         endif
          if (trim(sss_data_type) == 'ncar' .or. &
              trim(sst_data_type) == 'ncar') then
             write(nu_diag,*) ' oceanmixed_file           = ', &
@@ -712,8 +717,8 @@
          write(nu_diag,1010) ' restart_lvl               = ', restart_lvl
          write(nu_diag,1010) ' tr_pond                   = ', tr_pond
          write(nu_diag,1010) ' restart_pond              = ', restart_pond
-         write(nu_diag,1010) ' tr_aero                   = ', tr_aero
-         write(nu_diag,1010) ' restart_aero              = ', restart_aero
+         write(nu_diag,1010) ' tr_aero                   = ', tr_aero      !MH
+         write(nu_diag,1010) ' restart_aero              = ', restart_aero !MH
          write(nu_diag,1010) ' tr_iso                    = ', tr_iso
          write(nu_diag,1010) ' restart_iso               = ', restart_iso
 
@@ -753,8 +758,8 @@
 
          if (tr_aero) then
             nt_aero = ntrcr + 1
-            ntrcr = ntrcr + n_aero*4 ! 2 for snow aerosols and 2 for ice
-                                     ! for multiple (n_aero) aerosols
+            ntrcr = ntrcr + n_aero*4 !MH 2 for snow soot and 2 for ice
+                                     !MH for multiple (n_aero) aerosols
          else
             nt_aero = max_ntrcr
          endif
@@ -769,7 +774,7 @@
          if (ntrcr > max_ntrcr) then
             write(nu_diag,*) 'max_ntrcr < number of namelist tracers'
             call abort_ice('max_ntrcr < number of namelist tracers')
-         endif                               
+         endif
 
  1000    format (a30,2x,f9.2)  ! a30 to align formatted, unformatted statements
  1010    format (a30,2x,l6)    ! logical
@@ -784,7 +789,7 @@
              grid_type  /=  'column'         .and. &
              grid_type  /=  'rectangular'    .and. &
              grid_type  /=  'panarctic'      .and. &
-             grid_type  /=  'latlon' ) then 
+             grid_type  /=  'latlon' ) then
             call abort_ice('ice_init: unknown grid_type')
          endif
 
@@ -845,7 +850,7 @@
       !-----------------------------------------------------------------
 
       if (my_task == master_task) then
- 
+
          if (nilyr < 1) then
             write (nu_diag,*) 'nilyr =', nilyr
             write (nu_diag,*) 'Must have at least one ice layer'
@@ -892,8 +897,8 @@
       if (tr_pond) trcr_depend(nt_volpn) = 0   ! melt pond volume
       if (tr_aero) then
         do n=1,n_aero
-         trcr_depend(nt_aero+(n-1)*4  :nt_aero+(n-1)*4+1) = 2 ! snow volume-weighted
-         trcr_depend(nt_aero+(n-1)*4+2:nt_aero+(n-1)*4+3) = 1 ! volume-weighted
+         trcr_depend(nt_aero+(n-1)*4  :nt_aero+(n-1)*4+1) = 2 ! snow volume-weighted MH
+         trcr_depend(nt_aero+(n-1)*4+2:nt_aero+(n-1)*4+3) = 1 ! volume-weighted MH
         enddo
       endif
       if (tr_iso) then
@@ -978,7 +983,7 @@
                                 Tf,       trcr_depend, &
                                 aicen,    trcrn, &
                                 vicen,    vsnon, &
-                                eicen,    esnon) 
+                                eicen,    esnon)
 !
 ! !DESCRIPTION:
 !
@@ -1013,8 +1018,8 @@
 
       real (kind=dbl_kind), dimension (nx_block,ny_block), intent(in) :: &
          Tair    , & ! air temperature  (K)
-         Tf      , & ! freezing temperature (C) 
-         sst         ! sea surface temperature (C) 
+         Tf      , & ! freezing temperature (C)
+         sst         ! sea surface temperature (C)
 
       integer (kind=int_kind), dimension (max_ntrcr), intent(inout) :: &
          trcr_depend ! = 0 for aicen tracers, 1 for vicen, 2 for vsnon
@@ -1058,7 +1063,7 @@
 
       real (kind=dbl_kind), parameter :: &
          hsno_init = 0.20_dbl_kind   , & ! initial snow thickness (m)
-         edge_init_nh =  70._dbl_kind, & ! initial ice edge, N.Hem. (deg) 
+         edge_init_nh =  70._dbl_kind, & ! initial ice edge, N.Hem. (deg)
          edge_init_sh = -60._dbl_kind    ! initial ice edge, S.Hem. (deg)
 
 
@@ -1097,9 +1102,9 @@
 
       ! initial category areas in cells with ice
          hbar = c3  ! initial ice thickness with greatest area
-                    ! Note: the resulting average ice thickness 
+                    ! Note: the resulting average ice thickness
                     ! tends to be less than hbar due to the
-                    ! nonlinear distribution of ice thicknesses 
+                    ! nonlinear distribution of ice thicknesses
          sum = c0
          do n = 1, ncat
             if (n < ncat) then
@@ -1169,7 +1174,7 @@
 
             ! surface temperature
             if (calc_Tsfc) then
-        
+
                do ij = 1, icells
                   i = indxi(ij)
                   j = indxj(ij)
@@ -1238,7 +1243,7 @@
                do ij = 1, icells
                   i = indxi(ij)
                   j = indxj(ij)
-                  esnon(i,j,slyr1(n)+k-1) = & 
+                  esnon(i,j,slyr1(n)+k-1) = &
                           - rhos * Lfresh * vsnon(i,j,n)
                enddo            ! ij
 

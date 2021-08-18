@@ -161,7 +161,7 @@
                                       wind       (:,:,iblk), &   
                                       zlvl       (:,:,iblk), &   
                                       Qa         (:,:,iblk), &     
-                                      fiso_Qa    (:,:,:,iblk), &     
+                                      fiso_Qa    (:,:,:,iblk), &
                                       rhoa       (:,:,iblk), &
                                       strairx_ocn(:,:,iblk), & 
                                       strairy_ocn(:,:,iblk), & 

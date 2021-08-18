@@ -130,7 +130,7 @@
            nu            , & ! unit number
            nrec              ! record number (0 for sequential access)
 
-      real (kind=dbl_kind), dimension(nx_block,ny_block,max_blocks), &
+      real (kind=dbl_kind), dimension(:,:,:), &
            intent(out) :: &
            work              ! output array (real, 8-byte)
 
@@ -384,7 +384,7 @@
            nu            , & ! unit number
            nrec              ! record number (0 for sequential access)
 
-      real (kind=dbl_kind), dimension(nx_block,ny_block,max_blocks), &
+      real (kind=dbl_kind), dimension(:,:,:), &
            intent(in) :: &
            work              ! input array (real, 8-byte)
 

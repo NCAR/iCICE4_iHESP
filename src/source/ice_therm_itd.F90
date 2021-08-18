@@ -121,7 +121,7 @@
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,max_ntrcr,ncat), &
          intent(inout) :: &
-         trcrn     ! ice tracers, unit for isotope water is kg/m^3
+         trcrn     ! ice tracers,  unit for isotope water is kg/m^3
 
       real (kind=dbl_kind), dimension (nx_block,ny_block,ntilyr), &
          intent(inout) :: &
@@ -910,7 +910,7 @@
          intent(inout) :: &
          aice0     , & ! concentration of open water
          frazil    , & ! frazil ice growth        (m/step-->cm/day)
-         HDO_ocn , & !
+         HDO_ocn   , & !
          H2_16O_ocn, & !
          H2_18O_ocn, & !
          fresh     , & ! fresh water flux to ocean (kg/m^2/s)
@@ -952,7 +952,7 @@
          hi0max       , & ! max allowed thickness of new ice
          qi0(nilyr)   , & ! frazil ice enthalpy
          qi0av        , & ! mean value of qi0 for new ice (J kg-1)
-         vsurp        , & ! volume of new ice added to each cat (m)
+         vsurp        , & ! volume of new ice added to each cat
          area1        , & ! starting fractional area of existing ice
          vice1        , & ! starting volume of existing ice
          rnilyr       , & ! real(nilyr)
@@ -1382,7 +1382,7 @@
 
       real (kind=dbl_kind), dimension(nx_block,ny_block,n_aeromx), &
          intent(inout) :: &
-         fsoot         ! 
+         fsoot      ! 
 
       real (kind=dbl_kind), dimension(nx_block,ny_block,n_isomx), &
          intent(inout) :: &
@@ -1396,7 +1396,7 @@
          k           , & ! layer index
          ij          , & ! horizontal index, combines i and j loops
          icells      , & ! number of cells with aice > puny
-         it              ! tracer index
+         it              ! tracer index for aerosols
 
       integer (kind=int_kind), dimension(nx_block*ny_block) :: &
          indxi, indxj    ! compressed indices for cells with aice > puny

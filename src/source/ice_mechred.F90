@@ -61,6 +61,9 @@
 ! Ridging parameters
 !-----------------------------------------------------------------------
 
+      real (kind=dbl_kind) :: &
+         fsnowrdg         ! snow fraction that survives in ridging
+
       integer (kind=int_kind) :: & ! defined in namelist 
          kstrength    , & ! 0 for simple Hibler (1979) formulation 
                           ! 1 for Rothrock (1975) pressure formulation 
@@ -73,7 +76,7 @@
          Cf = 17._dbl_kind   , & ! ratio of ridging work to PE change in ridging 
          Cs = p25            , & ! fraction of shear energy contrbtng to ridging 
          Cp = p5*gravit*(rhow-rhoi)*rhoi/rhow, & ! proport const for PE 
-         fsnowrdg = p5       , & ! snow fraction that survives in ridging 
+!        fsnowrdg = p5       , & ! snow fraction that survives in ridging 
          Gstar  = p15        , & ! max value of G(h) that participates 
                                  ! (krdg_partic = 0) 
          astar  = p05        , & ! e-folding scale for G(h) participation 
@@ -130,7 +133,7 @@
                             dardg1dt,    dardg2dt,   &
                             dvirdgdt,    opening,    &
                             fresh,       fhocn,      &
-                            fsoot,   fiso_ocn)
+                            fsoot,       fiso_ocn)
 !
 ! !USES:
 !
@@ -196,7 +199,7 @@
 
       real (kind=dbl_kind), dimension(nx_block,ny_block,n_aeromx), &
          intent(inout), optional :: &
-         fsoot         ! 
+         fsoot      ! 
 
       real (kind=dbl_kind), dimension(nx_block,ny_block,n_isomx), &
          intent(inout), optional :: &
@@ -221,7 +224,7 @@
          aopen          ! area opening due to divergence/shear
 
       real (kind=dbl_kind), dimension (icells,n_aeromx) :: &
-         msoot          ! mass of aerosol added to ocean (kg m-2)
+         msoot       ! mass of soot added to ocean (kg m-2)
 
       real (kind=dbl_kind), dimension (icells,n_isomx) :: &
          miso_ocn       ! mass of isotope added to ocean (kg m-2)
@@ -272,7 +275,7 @@
       do ij = 1, icells
          msnow_mlt(ij) = c0
          esnow_mlt(ij) = c0
-         msoot(ij,:)   = c0
+         msoot    (ij,:) = c0
          miso_ocn(ij,:)= c0
          ardg1    (ij) = c0
          ardg2    (ij) = c0
@@ -1204,7 +1207,7 @@
          esnow_mlt    ! energy needed to melt snow in ocean (J m-2)
 
       real (kind=dbl_kind), dimension(icells,n_aeromx), intent(inout) :: &
-         msoot        ! mass of soot added to ocean (kg m-2)
+         msoot      ! mass of soot added to ocean (kg m-2)
 
       real (kind=dbl_kind), dimension(icells,n_isomx), intent(inout) :: &
          miso_ocn      ! mass of isotopes added to ocean (kg m-2)
@@ -1225,7 +1228,7 @@
          ij, m         , & ! horizontal indices, combine i and j loops
          iridge            ! number of cells with nonzero ridging
       integer (kind=int_kind) :: &
-         iaero,iiso        ! indices for extra tracers
+         iaero, iiso       ! indices for aerosol and isotope tracers
 
       integer (kind=int_kind), dimension (icells) :: &
          indxii, indxjj  , & ! compressed indices
@@ -1518,7 +1521,7 @@
             msnow_mlt(m) = msnow_mlt(m) + rhos*vsrdgn(ij)*(c1-fsnowrdg)
 
       !-----------------------------------------------------------------
-      !  Place part of the aerosol lost by ridging into the ocean.
+      !  Place part of the soot lost by ridging into the ocean.
       !-----------------------------------------------------------------
 
             if (n_aero >= 1) then

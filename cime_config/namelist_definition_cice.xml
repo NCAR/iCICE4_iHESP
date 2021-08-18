@@ -804,13 +804,12 @@
       <value>.false.</value>
     </values>
   </entry>
-<!--
   <entry id="tr_iso">
     <type>logical</type>
     <category>tracers</category>
     <group>tracer_nml</group>
     <desc>
-      Aerosol tracers.
+      Water isotope tracers.
     </desc>
     <values>
       <value>.true.</value>
@@ -823,13 +822,12 @@
     <category>tracers</category>
     <group>tracer_nml</group>
     <desc>
-      Aerosol restart from file.
+      Water isotope restart from file.
     </desc>
     <values>
       <value>.false.</value>
     </values>
   </entry>
--->
   <!-- =========================== -->
   <!-- Thermo_nml parameterizations -->
   <!-- =========================== -->

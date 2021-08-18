@@ -97,6 +97,7 @@ module ice_cpl_indices
   integer :: index_x2i_Faxa_snow_16O   ! flux: H2_16O
   integer :: index_x2i_Faxa_snow_18O   ! flux: H2_18O
   integer :: index_x2i_Faxa_snow_HDO   ! flux: HD
+
 contains
 
   subroutine ice_cpl_indices_set( )

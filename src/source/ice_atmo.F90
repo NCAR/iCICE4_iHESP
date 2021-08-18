@@ -137,7 +137,7 @@
          k     , & ! iteration index
          i, j  , & ! horizontal indices
          ij    , & ! combined ij index
-         n         ! 
+         n         !
 
       real (kind=dbl_kind) :: &
          TsfK  , & ! surface temperature in Kelvin (K)

@@ -138,7 +138,7 @@
          nt_vlvl  , & ! ridged ice volume fraction
          nt_volpn , & ! melt pond volume - not used, for now
          nt_iso   , & ! isotope tracers
-         nt_aero      ! starting index for aerosol within ice
+         nt_aero      ! starting index for aerosol within ice MH
 
       logical (kind=log_kind) :: &
          tr_aero,   & ! if .true., use aerosol tracers

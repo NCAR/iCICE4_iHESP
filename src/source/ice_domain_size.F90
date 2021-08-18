@@ -34,16 +34,16 @@
       integer (kind=int_kind), parameter :: &
         nx_global = NXGLOB    , & ! i-axis size
         ny_global = NYGLOB    , & ! j-axis size
-        ncat      = NCAT      , & ! number of categories
+        ncat      = NICECAT      , & ! number of categories
         nilyr     =   4       , & ! number of ice layers per category
         ntilyr    = ncat*nilyr, & ! number of ice layers in all categories
         nslyr     =   1       , & ! number of snow layers per category
         ntslyr    = ncat*nslyr, & ! number of snow layers in all categories
         n_aeromx  =   6       , & ! number of aerosols maximum
-        n_aero    = NTR_AERO  , & ! number of aerosols in use
+        n_aero    = NTRAERO  , & ! number of aerosols in use
         n_isomx   =   3       , & ! number of isotopes maximum
         n_iso     = NTR_ISO   , & ! number of isotopes in use
-        max_ntrcr =  32       , & ! number of tracers (defined in ice_state)
+        max_ntrcr =  32       , & ! number of tracers (defined in ice_state
                                   ! 1 = surface temperature
         max_nstrm =   5           ! Number of output streams
 
@@ -55,11 +55,11 @@
    !*** values for the parameter below.  A value higher than
    !*** necessary will not cause the code to fail, but will
    !*** allocate more memory than is necessary.  A value that
-   !*** is too low will cause the code to exit.  
+   !*** is too low will cause the code to exit.
    !*** A good initial guess is found using
    !*** max_blocks = (nx_global/block_size_x)*(ny_global/block_size_y)/
    !***               num_procs
- 
+
       integer (kind=int_kind), parameter :: &
         max_blocks = MXBLCKS      ! max number of blocks per processor
 

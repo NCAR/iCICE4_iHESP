@@ -164,10 +164,10 @@
          sfsalts, sfreshs, evps, fluxs , delmxs,  delmis, &
          delein, werrn, herrn, msltn, delmsltn, serrn, &
          deleis, werrs, herrs, mslts, delmslts, serrs, &
-         ftmp,faeron,faeros,fsootn,fsoots,     &
-         fison,fisos,fiso_ocnn,fiso_ocns
+         ftmp,faeron,faeros,fsootn,fsoots, &
+         fison, fisos, fiso_ocnn, fiso_ocns
 
-! for aerosol diagnostics
+! MH for aerosol diagnostics
       integer (kind=int_kind) :: &
         kaero, naero
       real (kind=dbl_kind) :: &
@@ -331,7 +331,7 @@
       hmaxn = global_maxval(vice, distrb_info, lmask_n)
       hmaxs = global_maxval(vice, distrb_info, lmask_s)
 
-! put in aerosol diagnostics
+! MH put in aerosol diagnostics
       if (tr_aero) then
          ! aerosols
         do naero=1,n_aero
@@ -417,7 +417,7 @@
 !       write(nu_diag,*) 'MH aeromx2s: ',aeromx3s
         enddo ! n_aero
       endif  ! tr_aero
-    
+
 ! put in isosol diagnostics
       if (tr_iso) then
          ! isotopes
@@ -504,7 +504,7 @@
 !       write(nu_diag,*) 'MH isomx2s: ',isomx3s
         enddo ! n_iso
       endif  ! tr_iso
-
+ 
       ! maximum ice speed
       !$OMP PARALLEL DO PRIVATE(iblk,i,j)
       do iblk = 1, nblocks

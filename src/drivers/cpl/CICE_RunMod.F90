@@ -182,6 +182,7 @@
          Trefn       , & ! air tmp reference level            (K)
          Qrefn           ! air sp hum reference level         (kg/kg)
 
+
       real (kind=dbl_kind), dimension (nx_block,ny_block,n_isomx) :: &
          fiso_Qrefn  , & ! air sp hum reference level         (kg/kg)
          fiso_evapn  , & ! flux of vapor, atmos to ice   (kg m-2 s-1)
@@ -337,9 +338,7 @@
             Qrefn (:,:)  = c0
             lhcoef(:,:)  = c0
             shcoef(:,:)  = c0
-
             fiso_Qrefn (:,:,:)  = c0
-
 
          endif   ! calc_Tsfc or calc_strair
 
@@ -477,10 +476,8 @@
                                     HDO_ocn(:,:,iblk),                   &
                                     H2_16O_ocn(:,:,iblk),                &
                                     H2_18O_ocn(:,:,iblk))
-
             endif
          endif
-
 
       !-----------------------------------------------------------------
       ! Melt ponds
