@@ -42,7 +42,7 @@
         n_aeromx  =   6       , & ! number of aerosols maximum
         n_aero    = NTRAERO  , & ! number of aerosols in use
         n_isomx   =   3       , & ! number of isotopes maximum
-        n_iso     = NTR_ISO   , & ! number of isotopes in use
+        n_iso     = NTRISO   , & ! number of isotopes in use
         max_ntrcr =  32       , & ! number of tracers (defined in ice_state
                                   ! 1 = surface temperature
         max_nstrm =   5           ! Number of output streams
