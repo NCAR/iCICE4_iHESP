@@ -753,7 +753,7 @@ contains
        call dumpfile(fname)
        if (restart_format == 'bin') then
           if (tr_aero) call write_restart_aero(filename_aero)
-          if (tr_iso)  call write_restart_iso(filename_iso
+          if (tr_iso)  call write_restart_iso(filename_iso)
           if (tr_iage) call write_restart_age(filename_iage)
           if (tr_FY)   call write_restart_FY(filename_FY)
           if (tr_lvl)  call write_restart_lvl(filename_lvl)
