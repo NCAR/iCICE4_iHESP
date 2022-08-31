@@ -169,7 +169,7 @@
 <tr_pond> .true. </tr_pond>
 
 <tr_aero> .true. </tr_aero>
-<tr_iso> .false. </tr_iso>
+<tr_iso> .true. </tr_iso>
 
 <!--------------------------->
 <!-- Domain namelist- --->
